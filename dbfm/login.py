@@ -6,6 +6,8 @@ import getpass
 import json
 import argparse
 import pickle
+import tempfile
+import os
 from . import common
 
 EMAIL_INFO = colored('➔', 'red') + colored(' Email/Phone: ', 'green')
@@ -18,15 +20,14 @@ def win_login():
     email = input(EMAIL_INFO)
     password = getpass.getpass(PASS_INFO)
     captcha_id = get_captcha_id()
-    get_capthca_pic(captcha_id)
-    file = '/tmp/captcha_pic.jpg'
+    path = get_capthca_pic(captcha_id)
     try:
         from subprocess import call
         from os.path import expanduser
-        call([expanduser('~') + '/.iterm2/imgcat', file])
+        call([expanduser('~') + '/.iterm2/imgcat', path])
     except:
         import webbrowser
-        webbrowser.open('file://' + file)
+        webbrowser.open('file://' + path)
     captcha_solution = input(CAPTCHA_INFO)
     return email, password, captcha_solution, captcha_id
 
@@ -105,10 +106,13 @@ def get_capthca_pic(captcha_id=None):
                      params=options,
                      headers=common.HEADERS)
     if r.status_code == 200:
-        path = '/tmp/captcha_pic.jpg'
+        h, path = tempfile.mkstemp(suffix = ".jpg")
+        os.close(h)
         print('Download captcha in ' + path)
         with open(path, 'wb') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
+        return path
     else:
         print("get captcha pic error with http code:" + str(r.status_code))
+        return None
