@@ -90,7 +90,7 @@ def request_token():
 
 def get_captcha_id():
     try:
-        r = requests.get('https://douban.fm/j/new_captcha', headers=HEADERS)
+        r = requests.get('https://douban.fm/j/new_captcha', headers=common.HEADERS)
         r.raise_for_status()
         return r.text.strip('"')
     except Exception as e:
@@ -103,7 +103,7 @@ def get_capthca_pic(captcha_id=None):
     }
     r = requests.get('https://douban.fm/misc/captcha',
                      params=options,
-                     headers=HEADERS)
+                     headers=common.HEADERS)
     if r.status_code == 200:
         path = '/tmp/captcha_pic.jpg'
         print('Download captcha in ' + path)
