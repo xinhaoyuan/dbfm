@@ -6,6 +6,7 @@ from .client import DoubanClient
 from . import login, common
 
 def get_playable_data(song_data):
+    id = song_data["sid"]
     data = {}
     for src in song_data["all_play_sources"]:
         if "url" in src and isinstance(song_data["url"], str):
@@ -28,19 +29,19 @@ def get_playable_data(song_data):
         data["singers"] = [ d["name"] for d in song_data["singers"] ]
         pass
 
-    return data
+    return id, data
 
 def parse_channel_id(cmd):
     if "channel_pattern" in cmd:
         for c in common.CHANNELS:
             if re.search(cmd["channel_pattern"], c["name"]):
-                return c["channel_id"]
+                return c["id"]
             pass
         pass
     elif "channel_id" in cmd:
         for c in common.CHANNELS:
             if cmd["channel_id"] == c["channel_id"]:
-                return c["channel_id"]
+                return c["id"]
             pass
         pass
     return None
@@ -72,8 +73,9 @@ class Console(object):
                     return { "type" : "reply_error",
                              "message" : "client is not initialized"}
                 try:
-                    raw_data = self._client.get_next_song()
-                    data = get_playable_data(raw_data)
+                    channel_id = cmd["channel_id"] if "channel_id" in cmd else None
+                    raw_data = self._client.get_next_song(channel_id)
+                    id, data = get_playable_data(raw_data)
                     if "sid" in raw_data:
                         self._current_sid = raw_data["sid"]
                     else:
@@ -84,18 +86,25 @@ class Console(object):
                              "message" : "cannot get next song",
                              "details" : str(e) }
                 return { "type" : "reply_ok",
+                         "id" : id,
                          "data" : data,
                          "raw_data" : raw_data }
             elif cmd["type"] == "cmd_rate":
                 if self._client is None:
                     return { "type" : "reply_error",
                              "message" : "client is not initialized"}
-                if self._current_sid is not None:
+                if "id" in cmd:
+                    self._client.rate(cmd["id"], cmd["rating"])
+                    return { "type" : "reply_ok" }
+                elif self._current_sid is not None:
                     self._client.rate(self._current_sid, cmd["rating"])
                     return { "type" : "reply_ok" }
                 else:
                     return { "type" : "reply_error",
                              "message" : "current sid not found" }
+            elif cmd["type"] == "cmd_list_channels":
+                return { "type" : "reply_ok",
+                         "channels" : common.CHANNELS }
             elif cmd["type"] == "cmd_get_channel":
                 if self._client is None:
                     return { "type" : "reply_error",

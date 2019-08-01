@@ -64,7 +64,9 @@ class DoubanClient(object):
             self.append_songs(data)
         pass
 
-    def get_next_song(self):
+    def get_next_song(self, channel_id = None):
+        if channel_id is not None:
+            self.set_channel_id(channel_id)
         retry = 3
         while len(self._queue) == 0 and retry > 0:
             self.refresh_playlist()

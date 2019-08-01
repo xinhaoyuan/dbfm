@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = "dbfm",
     description = "An overly simple douban.fm client",
-    version = "0.1",
+    version = "0.2.0",
     packages = [ "dbfm" ],
     include_package_data = True,
     author = "Xinhao Yuan",

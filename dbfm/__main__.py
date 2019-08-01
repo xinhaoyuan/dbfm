@@ -48,7 +48,7 @@ if args.to_login:
 
 if args.list_channels:
     for c in common.CHANNELS:
-        print("  {}: {}".format(c["name"], c["channel_id"]))
+        print("  {}: {}".format(c["name"], c["id"]))
     sys.exit(0)
     pass
 
