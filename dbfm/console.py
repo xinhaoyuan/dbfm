@@ -81,7 +81,7 @@ class Console(object):
                     else:
                         self._current_sid = None
                     assert("url" in data)
-                except e:
+                except Exception as e:
                     return { "type" : "reply_error",
                              "message" : "cannot get next song",
                              "details" : str(e) }
