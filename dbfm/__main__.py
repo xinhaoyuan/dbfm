@@ -18,14 +18,15 @@ parser.add_argument("--player-cmd", dest = "player_cmd", default = "mplayer {son
 parser.add_argument("--channel-id", dest = "channel_id", type = int)
 parser.add_argument("--channel-name", dest = "channel_name")
 parser.add_argument("--list-channels", action = "store_true", dest = "list_channels")
-parser.add_argument("--logging")
+parser.add_argument("--log")
 args = parser.parse_args()
 
-if args.logging is not None:
-    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s', filename = args.logging, filemode = "w")
+if args.log is not None:
+    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s', filename = args.log, filemode = "w")
     h = logging.StreamHandler(sys.stderr)
     h.setLevel(logging.DEBUG)
     logging.root.addHandler(h)
+    pass
 
 if args.token_file is None:
     if "XDG_CONFIG_DIR" in os.environ:
