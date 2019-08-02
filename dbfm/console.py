@@ -2,6 +2,7 @@ import sys
 import pickle
 import json
 import re
+import logging
 from .client import DoubanClient
 from . import login, common
 
@@ -82,6 +83,7 @@ class Console(object):
                         self._current_sid = None
                     assert("url" in data)
                 except Exception as e:
+                    logging.exception("cmd_next")
                     return { "type" : "reply_error",
                              "message" : "cannot get next song",
                              "details" : str(e) }
@@ -126,6 +128,7 @@ class Console(object):
                 return { "type" : "reply_error",
                          "message" : "command not recognized" }
         except Exception as e:
+            logging.exception("handle_command")
             self._is_error = True
             return { "type" : "reply_error",
                      "message" : "exception while handling command",

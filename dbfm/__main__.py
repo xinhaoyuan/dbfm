@@ -6,6 +6,7 @@ import time
 import subprocess
 import json
 import errno
+import logging
 
 from . import login, common, console
 
@@ -17,7 +18,14 @@ parser.add_argument("--player-cmd", dest = "player_cmd", default = "mplayer {son
 parser.add_argument("--channel-id", dest = "channel_id", type = int)
 parser.add_argument("--channel-name", dest = "channel_name")
 parser.add_argument("--list-channels", action = "store_true", dest = "list_channels")
+parser.add_argument("--logging")
 args = parser.parse_args()
+
+if args.logging is not None:
+    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s', filename = args.logging, filemode = "w")
+    h = logging.StreamHandler(sys.stderr)
+    h.setLevel(logging.DEBUG)
+    logging.root.addHandler(h)
 
 if args.token_file is None:
     if "XDG_CONFIG_DIR" in os.environ:
@@ -55,18 +63,18 @@ if args.list_channels:
 c = console.Console()
 r = c.handle_command({"type" : "cmd_init", "token_file" : args.token_file})
 if r["type"] != "reply_ok":
-    print("Got error while initialize console. Maybe login again with -l option")
+    logging.warning("Got error while initialize console. Maybe login again with -l option")
     sys.exit(1)
 
 if args.channel_id is not None:
     r = c.handle_command({ "type" : "cmd_set_channel", "channel_id" : args.channel_id })
     if r["type"] != "reply_ok":
-        print("Got error while set channel id: {}".format(r))
+        logging.warning("Got error while set channel id: {}".format(r))
         sys.exit(1)
 elif args.channel_name is not None:
     r = c.handle_command({ "type" : "cmd_set_channel", "channel_pattern" : args.channel_name })
     if r["type"] != "reply_ok":
-        print("Got error while set channel name: {}".format(r))
+        logging.warning("Got error while set channel name: {}".format(r))
         sys.exit(1)
 
 if args.player_mode:
@@ -76,7 +84,7 @@ if args.player_mode:
             if r["type"] == "reply_ok":
                 subprocess.check_call(args.player_cmd.format(song_url = r["data"]["url"]), shell = True)
             else:
-                print("Got error while retrieving the next song. Wait for 10s.")
+                logging.warning("Got error while retrieving the next song. Wait for 10s.")
                 time.sleep(10)
                 pass
             pass
@@ -85,7 +93,12 @@ if args.player_mode:
         print("Interrupted. Bye!")
 else:
     for line in sys.stdin:
-        r = c.handle_command(json.loads(line))
+        try:
+            r = c.handle_command(json.loads(line))
+        except:
+            logging.exception("Exception in main loop")
+            r = {}
+            pass
         sys.stdout.write(json.dumps(r))
         sys.stdout.write("\n")
         sys.stdout.flush()
