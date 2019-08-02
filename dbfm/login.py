@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import colorama
 from termcolor import colored
 import requests
 import getpass
@@ -9,6 +10,8 @@ import pickle
 import tempfile
 import os
 from . import common
+
+colorama.init()
 
 EMAIL_INFO = colored('➔', 'red') + colored(' Email/Phone: ', 'green')
 PASS_INFO = colored('➔', 'red') + colored(' Password: ', 'green')
@@ -30,7 +33,6 @@ def win_login():
         webbrowser.open('file://' + path)
     captcha_solution = input(CAPTCHA_INFO)
     return email, password, captcha_solution, captcha_id
-
 
 def request_token():
     """

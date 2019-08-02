@@ -10,7 +10,7 @@ setup(
     author_email = "xinhaoyuan@gmail.com",
     url = "https://github.com/xinhaoyuan/dbfm",
     license = "Apache License 2.0",
-    install_requires = [ "requests", "termcolor" ],
+    install_requires = [ "requests", "termcolor", "colorama" ],
     long_description = open("README.md").read(),
     long_description_content_type = "text/markdown",
 )
