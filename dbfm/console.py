@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import sys
 import pickle
 import json
 import re
 import logging
+import six
 from .client import DoubanClient
 from . import login, common
 
@@ -10,11 +12,11 @@ def get_playable_data(song_data):
     id = song_data["sid"]
     data = {}
     for src in song_data["all_play_sources"]:
-        if "url" in src and isinstance(song_data["url"], str):
+        if "url" in src and isinstance(song_data["url"], six.string_types):
             data["url"] = src["url"]
             break
         pass
-    if "url" not in data and "url" in song_data and isinstance(song_data["url"], str):
+    if "url" not in data and "url" in song_data and isinstance(song_data["url"], six.string_types):
         data["url"] = song_data["url"]
         pass
 

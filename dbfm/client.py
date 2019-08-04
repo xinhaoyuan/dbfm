@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 
 from . import common
@@ -74,7 +75,8 @@ class DoubanClient(object):
             pass
         if len(self._queue) == 0:
             raise Exception("Cannot get new song")
-        return self._queue.pop(0)
+        ret = self._queue.pop(0)
+        return ret
 
     def set_channel_id(self, id):
         self._channel_id = id

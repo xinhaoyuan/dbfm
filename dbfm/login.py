@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 import colorama
 from termcolor import colored
 import requests
@@ -9,6 +8,8 @@ import argparse
 import pickle
 import tempfile
 import os
+import six
+
 from . import common
 
 colorama.init()
@@ -20,7 +21,7 @@ ERROR = colored('(╯‵□′)╯︵┻━┻: ', 'red')
 
 def win_login():
     """登陆界面"""
-    email = input(EMAIL_INFO)
+    email = six.moves.input(EMAIL_INFO)
     password = getpass.getpass(PASS_INFO)
     captcha_id = get_captcha_id()
     path = get_capthca_pic(captcha_id)
@@ -31,7 +32,7 @@ def win_login():
     except:
         import webbrowser
         webbrowser.open('file://' + path)
-    captcha_solution = input(CAPTCHA_INFO)
+    captcha_solution = six.moves.input(CAPTCHA_INFO)
     return email, password, captcha_solution, captcha_id
 
 def request_token():

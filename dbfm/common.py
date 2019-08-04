@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 HEADERS = {"User-Agent": "Paw/2.2.5 (Macintosh; OS X/10.11.1) GCDHTTPRequest"}
 CHANNELS = [
     # {'name': '红心兆赫', 'id': -3},
