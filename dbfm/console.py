@@ -11,6 +11,7 @@ from . import login, common
 def get_playable_data(song_data):
     id = song_data["sid"]
     data = {}
+    logging.debug("song data: {}".format(song_data))
     for src in song_data["all_play_sources"]:
         if "url" in src and isinstance(song_data["url"], six.string_types):
             data["url"] = src["url"]
@@ -30,6 +31,10 @@ def get_playable_data(song_data):
 
     if "singers" in song_data:
         data["singers"] = [ d["name"] for d in song_data["singers"] ]
+        pass
+
+    if "length" in song_data:
+        data["length"] = song_data["length"]
         pass
 
     return id, data
