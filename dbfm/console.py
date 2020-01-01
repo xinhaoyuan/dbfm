@@ -143,7 +143,10 @@ class Console(object):
 
 if __name__ == "__main__":
     console = Console()
-    for line in sys.stdin:
+    while True:
+        line = sys.stdin.readline()
+        if len(line) == 0:
+            continue
         reply = console.handle_command(json.loads(line.strip()))
         sys.stdout.write(json.dumps(reply))
         sys.stdout.write("\n")

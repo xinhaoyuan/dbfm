@@ -94,7 +94,10 @@ if args.player_mode:
     except KeyboardInterrupt:
         print("Interrupted. Bye!")
 else:
-    for line in sys.stdin:
+    while True:
+        line = sys.stdin.readline()
+        if len(line) == 0 :
+            break
         try:
             r = c.handle_command(json.loads(line))
         except:
@@ -104,3 +107,5 @@ else:
         sys.stdout.write(json.dumps(r))
         sys.stdout.write("\n")
         sys.stdout.flush()
+        pass
+    pass
