@@ -21,8 +21,7 @@ ERROR = colored('(╯‵□′)╯︵┻━┻: ', 'red')
 
 def win_login():
     """登陆界面"""
-    email = six.moves.input(EMAIL_INFO)
-    password = getpass.getpass(PASS_INFO)
+    print("Grabbing captcha ...")
     captcha_id = get_captcha_id()
     path = get_capthca_pic(captcha_id)
     try:
@@ -33,6 +32,8 @@ def win_login():
         import webbrowser
         webbrowser.open('file://' + path)
     captcha_solution = six.moves.input(CAPTCHA_INFO)
+    email = six.moves.input(EMAIL_INFO)
+    password = getpass.getpass(PASS_INFO)
     return email, password, captcha_solution, captcha_id
 
 def request_token():
